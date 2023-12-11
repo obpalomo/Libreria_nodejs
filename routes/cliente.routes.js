@@ -5,6 +5,7 @@ const {
   buscarClientes,
   buscarPorTematica,
   crearCliente,
+  eliminarCliente,
 } = require("../controllers/cliente.controller");
 
 const { validarEntradaCliente } = require("../helpers/validadores");
@@ -52,5 +53,14 @@ router.post("/", async (req, res) => {
 
   res.json({ msg: "Cliente creado correctamente" });
 });
+
+router.delete("/:id", async (req,res) => {
+  const clienteEliminado = await eliminarCliente(req.params.id)
+  if(clienteEliminado) {
+    res.json({msg:"Cliente eliminado"})
+  } else {
+    res.status(404).json({msg:"Cliente no encontrado"})
+  }
+})
 
 module.exports = router;

@@ -37,6 +37,7 @@ function validarEntradaCliente(body){
 }
 
 
+
 module.exports = {
     validarEntradaLibro,
     validarEntradaCliente

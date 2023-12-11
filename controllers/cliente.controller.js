@@ -32,10 +32,16 @@ async function crearCliente(nom,mail,pass,tem) {
     }
 }
 
+async function eliminarCliente(id) {
+    const clienteEliminado = await Cliente.findByIdAndDelete(id)
+    return clienteEliminado
+}
+
 
 
 module.exports = {
     buscarClientes,
     buscarPorTematica,
-    crearCliente
+    crearCliente,
+    eliminarCliente,
 }
