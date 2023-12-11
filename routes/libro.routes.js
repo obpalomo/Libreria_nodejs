@@ -6,9 +6,12 @@ const {
   buscarPorNombreOAutor,
   entradaLibro,
   eliminarLibro,
+  modificarLibro,
+  patchLibro,
 } = require("../controllers/libro.controller");
 
 const { validarEntradaLibro } = require("../helpers/validadores");
+const Libros = require("../models/libro.model");
 
 router.get("/", async (req, res) => {
   try {
@@ -61,5 +64,47 @@ router.delete("/:id", async (req, res) => {
     res.status(404).json({ msg: "Libro no encontrado" });
   }
 });
+
+
+router.put("/:id", async (req,res) => {
+  let libroencontrado = null;
+  let msg = [];
+  const resultadoValidacion = validarEntradaLibro(req.body);
+  if (!resultadoValidacion.valido) {
+    res.status(400).json({ msg: resultadoValidacion.mensaje });
+  } else {
+    libroencontrado = await modificarLibro(
+      req.params.id,
+      req.body.nombre.trim(),
+      req.body.autor.trim(),
+      req.body.publicacion,
+      req.body.clasificacion
+    )
+    res.json(libroencontrado === null
+      ? { msg: "error: libro no encontrado" }
+      : { dato: libroencontrado, mensajes: 'El libro se ha modificado' }
+  );
+  }
+})
+
+router.patch("/:id", async (req, res) => {
+  try {
+    const libroencontrado = await patchLibro(req.params.id, req.body);
+
+    if (libroencontrado === null) {
+      return res.status(404).json({ msg: "Error: Libro no encontrado" });
+    }
+
+    res.json({
+      dato: libroencontrado,
+      mensaje: 'El libro se ha modificado correctamente'
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error interno del servidor' });
+  }
+});
+
+
 
 module.exports = router;

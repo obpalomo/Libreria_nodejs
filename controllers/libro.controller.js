@@ -34,10 +34,41 @@ async function eliminarLibro(id) {
     return libroEliminado
 }
 
+async function modificarLibro(id,nom,autor,pub,clas) {
+  const libroModificado = await Libro.findByIdAndUpdate(id, {
+    nombre: nom,
+    autor: autor,
+    publicacion: pub,
+    clasificacion: clas,
+  })
+    return libroModificado
+}
+
+async function patchLibro(id, datosActualizados) {
+  try {
+    const resultado = await Libro.findOneAndUpdate(
+      { _id: id },
+      { $set: datosActualizados },
+      { new: true } // Para obtener el libro actualizado
+    );
+
+    if (!resultado) {
+      throw new Error("Libro no encontrado");
+    }
+
+    return resultado;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Error al modificar el libro");
+  }
+}
+
 
 module.exports = {
     buscarLibros,
     buscarPorNombreOAutor,
     entradaLibro,
     eliminarLibro,
+    modificarLibro,
+    patchLibro,
 }
