@@ -19,9 +19,17 @@ async function crearCliente(nom,mail,pass,tem) {
         tema:tem,
     })
 
-    await nuevoCliente.save()
-
-    return nuevoCliente;
+    try {
+        await nuevoCliente.save();
+        return nuevoCliente;
+    } catch (error) {
+        if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
+            // Manejar el error de correo electrónico duplicado
+            return null;
+        }
+        // Otro tipo de error
+        throw error;
+    }
 }
 
 
