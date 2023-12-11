@@ -43,7 +43,7 @@ router.post("/", async (req,res) => {
         req.body.nombre.trim(),
         req.body.autor.trim(),
         req.body.publicacion,
-        req.body.clasificacion.trim()
+        req.body.clasificacion
     )
     res.json({msg:'Entrada libro correcta'})
 })

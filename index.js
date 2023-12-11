@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const libroRouter = require('./routes/libro.routes')
-/* const clienteRouter = require('./routes/cliente.routes') */
+const clienteRouter = require('./routes/cliente.routes')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -19,7 +19,7 @@ mongoose.connect('mongodb+srv://obpalomo:ZrbmRvNtjT51bdY6@cluster1.zlkhvg5.mongo
 app.use('/libros', libroRouter)
 
 // importar clientes routes
-/* app.use('/clientes', clienteRouter) */
+app.use('/clientes', clienteRouter)
 
 
 app.listen(3000)
