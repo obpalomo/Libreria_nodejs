@@ -5,6 +5,7 @@ const {
   buscarLibros,
   buscarPorNombreOAutor,
   entradaLibro,
+  eliminarLibro,
 } = require("../controllers/libro.controller");
 
 const {validarEntradaLibro} = require('../helpers/validadores')
@@ -45,6 +46,15 @@ router.post("/", async (req,res) => {
         req.body.clasificacion.trim()
     )
     res.json({msg:'Entrada libro correcta'})
+})
+
+router.delete("/:id", async (req,res) => {
+    const libroEliminado = await eliminarLibro(req.params.id)
+    if (libroEliminado) {
+        res.json({msg: "El libro se ha eliminado"})
+    } else {
+        res.status(404).json({msg:"Libro no encontrado"})
+    }
 })
 
 

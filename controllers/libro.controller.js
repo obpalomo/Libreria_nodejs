@@ -29,9 +29,15 @@ async function entradaLibro(nom,autor,pub,clas) {
     return nuevoLibro
 }
 
+async function eliminarLibro(id) {
+    const libroEliminado = await Libro.findByIdAndDelete(id)
+    return libroEliminado
+}
+
 
 module.exports = {
     buscarLibros,
     buscarPorNombreOAutor,
     entradaLibro,
+    eliminarLibro,
 }
