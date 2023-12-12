@@ -11,8 +11,12 @@ const {
 const { validarEntradaCliente } = require("../helpers/validadores");
 
 router.get("/", async (req, res) => {
+  try {
   const clientes = await buscarClientes();
   res.json(clientes);
+  } catch (error) {
+    res.status(500).json({msg: 'error interno en el servidor'})
+  }
 });
 
 router.get("/:tema", async (req, res) => {
