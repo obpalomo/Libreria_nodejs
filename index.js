@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const libroRouter = require('./routes/libro.routes')
@@ -9,7 +10,9 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-mongoose.connect('mongodb+srv://obpalomo:ZrbmRvNtjT51bdY6@cluster1.zlkhvg5.mongodb.net/Libreria',{
+app.set("secretKey", process.env.JWTSECRET)
+
+mongoose.connect(process.env.CONNECTIONSTRING,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -22,4 +25,4 @@ app.use('/libros', libroRouter)
 app.use('/clientes', clienteRouter)
 
 
-app.listen(3000)
+app.listen(process.env.PORT)

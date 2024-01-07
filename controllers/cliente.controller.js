@@ -5,6 +5,11 @@ async function buscarClientes(){
     return todos;
 }
 
+async function buscarPorMail(mail) {
+    const clienteEncontrado = await Cliente.findOne({email: mail})
+    return clienteEncontrado
+}
+
 async function buscarPorTematica(tema) {
     const regex = new RegExp(tema, 'i');
     const resultados = await Cliente.find({tema:{$regex: regex}})
@@ -18,16 +23,9 @@ async function crearCliente(nom,mail,pass,tem) {
         password:pass,
         tema:tem,
     })
+        await nuevoCliente.save()
 
-    try {
-        await nuevoCliente.save();
-        return nuevoCliente;
-    } catch (error) {
-        if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
-            return null;
-        }
-        throw error;
-    }
+        return nuevoCliente
 }
 
 async function eliminarCliente(id) {
@@ -42,4 +40,5 @@ module.exports = {
     buscarPorTematica,
     crearCliente,
     eliminarCliente,
+    buscarPorMail
 }

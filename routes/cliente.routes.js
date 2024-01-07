@@ -8,7 +8,8 @@ const {
   eliminarCliente,
 } = require("../controllers/cliente.controller");
 
-const { validarEntradaCliente } = require("../helpers/validadores");
+const {middlewareEntradaCliente,middlewaraEmailValido,emailDuplicado} = require('../middlewares/cliente.middlewares')
+
 
 router.get("/", async (req, res) => {
   try {
@@ -36,27 +37,14 @@ router.get("/:tema", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const validacion = validarEntradaCliente(req.body);
-
-  if (!validacion.valido) {
-    return res.status(400).json({ msg: validacion.mensaje });
+router.post("/", middlewareEntradaCliente, middlewaraEmailValido, emailDuplicado, async (req, res) => {
+  try{
+    await crearCliente(req.body.nombre.trim(), req.body.email.trim(), req.body.password, req.body.tema)
+    res.json({msg: "usuario creado"})
+  } catch (error) {
+    res.status(500).json({msg: "error interno en el servidor"})
   }
-  const nuevoCliente = await crearCliente(
-    req.body.nombre.trim(),
-    req.body.email.trim(),
-    req.body.password,
-    req.body.tema
-  );
-  if (nuevoCliente === null) {
-    // Cliente con correo electrónico duplicado
-    return res
-      .status(400)
-      .json({ msg: "Error: El correo electrónico ya está registrado" });
-  }
-
-  res.json({ msg: "Cliente creado correctamente" });
-});
+})
 
 router.delete("/:id", async (req,res) => {
   const clienteEliminado = await eliminarCliente(req.params.id)
