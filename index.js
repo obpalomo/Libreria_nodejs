@@ -3,6 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const libroRouter = require('./routes/libro.routes')
 const clienteRouter = require('./routes/cliente.routes')
+const pedidoRouter = require('./routes/pedido.routes')
 const mongoose = require('mongoose')
 
 const app = express()
@@ -20,6 +21,8 @@ mongoose.connect(process.env.CONNECTIONSTRING,{
 
   // importar libros routes
 app.use('/libros', libroRouter)
+
+app.use('/pedidos', pedidoRouter)
 
 // importar clientes routes
 app.use('/clientes', clienteRouter)
