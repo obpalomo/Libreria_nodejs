@@ -1,7 +1,7 @@
 const Pedido = require('../models/pedido.model')
 
 async function obtenerPedidos(){
-    const pedidos = await Pedido.find()
+    const pedidos = await Pedido.find().populate('libro','-_id -__v').populate('comprador','-password -_id -__v"')
 
     return pedidos
 }

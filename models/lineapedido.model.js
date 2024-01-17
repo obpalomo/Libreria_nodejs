@@ -1,14 +1,8 @@
 const mongoose = require('mongoose')
 
-
 const Schema = mongoose.Schema
 
-const pedidoSchema = new Schema ({
-    comprador:{
-        type: mongoose.Types.ObjectId,
-        ref: "clientes",
-        required: true,
-    },
+const lineaPedidoSchema = new Schema({
     libro: {
         type: mongoose.Types.ObjectId,
         ref: "libros",
@@ -20,6 +14,8 @@ const pedidoSchema = new Schema ({
     }
 })
 
-const Pedido = mongoose.model("pedidos", pedidoSchema)
 
-module.exports = Pedido
+
+const LineaPedido = mongoose.model("lineasPedido",lineaPedidoSchema)
+
+module.exports = LineaPedido
