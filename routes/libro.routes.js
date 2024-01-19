@@ -8,6 +8,7 @@ const {
   eliminarLibro,
   modificarLibro,
   patchLibro,
+  busquedaContiene,
 } = require("../controllers/libro.controller");
 
 const { validarEntradaLibro } = require("../helpers/validadores");
@@ -15,8 +16,17 @@ const Libros = require("../models/libro.model");
 
 router.get("/", async (req, res) => {
   try {
-    const libros = await buscarLibros();
-    res.json(libros);
+    let libros = []
+    if (req.query.nombre || req.query.autor) {
+        const nombre = req.query.nombre ? req.query.nombre : ""
+        const marca = req.query.autor ? req.query.autor : ""
+        libros = await busquedaContiene(nombre, marca)
+    }
+    else {
+        libros = await buscarLibros()
+    }
+
+    res.json(libros)
   } catch (error) {
     console.log(String(error));
     res.status(500).json({ msg: "error interno" });

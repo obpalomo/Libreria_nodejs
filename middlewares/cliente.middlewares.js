@@ -1,6 +1,8 @@
 const {validarEntradaCliente} = require('../helpers/validadores')
 const {buscarPorMail} = require('../controllers/cliente.controller')
 
+const jwt = require('jsonwebtoken')
+
 function middlewareEntradaCliente(req,res,next) {
     const resultadoValidacion = validarEntradaCliente(req.body)
     if (resultadoValidacion.valido) {
@@ -27,10 +29,15 @@ async function emailDuplicado(req,res,next){
     }
 }
 
+function estaLoggeado(req,res,next){
+    next()
+}
+
 
 
 module.exports = {
     middlewareEntradaCliente,
     middlewaraEmailValido,
     emailDuplicado,
+    estaLoggeado
 }

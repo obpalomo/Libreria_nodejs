@@ -6,19 +6,28 @@ const {
   buscarPorTematica,
   crearCliente,
   eliminarCliente,
+  login,
+  buscarPorMail,
 } = require("../controllers/cliente.controller");
 
-const {middlewareEntradaCliente,middlewaraEmailValido,emailDuplicado} = require('../middlewares/cliente.middlewares')
+const {middlewareEntradaCliente,middlewaraEmailValido,emailDuplicado,estaLoggeado} = require('../middlewares/cliente.middlewares')
 
 
 router.get("/", async (req, res) => {
   try {
-  const clientes = await buscarClientes();
-  res.json(clientes);
-  } catch (error) {
-    res.status(500).json({msg: 'error interno en el servidor'})
-  }
-});
+    let clientes = []
+    if(req.query.email){
+        clientes = await buscarPorMail(req.query.email)
+    }
+    else{
+        clientes = await buscarClientes()
+    }
+    res.json(clientes)
+} catch (error) {
+    res.status(500).json({ msg: "error interno en el servidor" })
+}
+
+})
 
 router.get("/:tema", async (req, res) => {
   try {
@@ -54,5 +63,19 @@ router.delete("/:id", async (req,res) => {
     res.status(404).json({msg:"Cliente no encontrado"})
   }
 })
+
+router.post("/login", async (req,res)=>{
+  try{
+      const resultado = await login(req.body.email, req.body.password)
+      res.json({token: resultado.token, msg: resultado.msg})
+  }catch(error){
+      res.status(500).json({ msg: "error interno en el servidor" })
+  }
+})
+
+router.get("/zona-privada/perfil", estaLoggeado, async(req, res)=>{
+  res.json({msg:'bienvenido a tu perfil!'})
+})
+
 
 module.exports = router;

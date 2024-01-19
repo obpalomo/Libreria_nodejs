@@ -16,6 +16,12 @@ async function buscarPorNombreOAutor(lib) {
     return resultados;
   }
 
+  async function busquedaContiene(nombre,autor){
+    const libros = await Libro.find( { nombre: { "$regex": nombre, "$options": "i" },
+                                      autor: { "$regex": autor, "$options": "i" },})
+    return  libros
+}
+
 async function entradaLibro(nom,autor,pub,clas) {
     const nuevoLibro = new Libro ({
         nombre: nom,
@@ -71,4 +77,5 @@ module.exports = {
     eliminarLibro,
     modificarLibro,
     patchLibro,
+    busquedaContiene
 }
