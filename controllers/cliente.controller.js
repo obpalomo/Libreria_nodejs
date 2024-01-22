@@ -2,6 +2,8 @@ const Cliente = require('../models/cliente.model')
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
+const {encriptar, comprobar} = require('../helpers/encriptacion')
+
 
 async function buscarClientes(){
     const todos = await Cliente.find()
@@ -9,7 +11,12 @@ async function buscarClientes(){
 }
 
 async function buscarPorMail(mail) {
-    const clienteEncontrado = await Cliente.find({email: mail})
+    const clienteEncontrado = await Cliente.findOne({email: mail})
+    return clienteEncontrado
+}
+
+async function buscarPorId(id){
+    const clienteEncontrado = await Cliente.findById(id)
     return clienteEncontrado
 }
 
@@ -19,12 +26,14 @@ async function buscarPorTematica(tema) {
     return resultados;
 }
 
-async function crearCliente(nom,mail,pass,tem) {
+async function crearCliente(nom,mail,pwd,tem,rol) {
+    const hash = await encriptar(pwd)
     const nuevoCliente = new Cliente ({
         nombre:nom,
         email:mail,
-        password:pass,
+        password:hash,
         tema:tem,
+        rol:rol
     })
         await nuevoCliente.save()
 
@@ -70,5 +79,6 @@ module.exports = {
     crearCliente,
     eliminarCliente,
     buscarPorMail,
-    login
+    login,
+    buscarPorId
 }

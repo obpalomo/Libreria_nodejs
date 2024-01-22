@@ -20,6 +20,10 @@ const clienteSchema = new Schema({
     tema:{
         type: String,
         required: false
+    },
+    rol:{
+        type:String,
+        required: true
     }
 })
 

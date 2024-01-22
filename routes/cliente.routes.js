@@ -8,9 +8,10 @@ const {
   eliminarCliente,
   login,
   buscarPorMail,
+  buscarPorId,
 } = require("../controllers/cliente.controller");
 
-const {middlewareEntradaCliente,middlewaraEmailValido,emailDuplicado,estaLoggeado} = require('../middlewares/cliente.middlewares')
+const {middlewareEntradaCliente,middlewaraEmailValido,emailDuplicado,estaLoggeado,esAdmin} = require('../middlewares/cliente.middlewares')
 
 
 router.get("/", async (req, res) => {
@@ -46,9 +47,9 @@ router.get("/:tema", async (req, res) => {
   }
 });
 
-router.post("/", middlewareEntradaCliente, middlewaraEmailValido, emailDuplicado, async (req, res) => {
+router.post("/", middlewareEntradaCliente, middlewaraEmailValido,emailDuplicado, async (req, res) => {
   try{
-    await crearCliente(req.body.nombre.trim(), req.body.email.trim(), req.body.password, req.body.tema)
+    await crearCliente(req.body.nombre.trim(), req.body.email.trim(), req.body.password, req.body.tema, req.body.rol)
     res.json({msg: "usuario creado"})
   } catch (error) {
     res.status(500).json({msg: "error interno en el servidor"})
@@ -73,9 +74,15 @@ router.post("/login", async (req,res)=>{
   }
 })
 
-router.get("/zona-privada/perfil", estaLoggeado, async(req, res)=>{
-  res.json({msg:'bienvenido a tu perfil!'})
+router.get("/zona-privada/perfil/:id", estaLoggeado, async(req, res)=>{
+  const clienteEncontrado = await buscarPorId(req.params.id)
+  res.json({msg:'bienvenido a tu perfil! ' + clienteEncontrado.email})
 })
+
+router.get("/zona-admin/home", esAdmin, async(req,res) => {
+  res.json({msg:'hola admin'})
+})
+
 
 
 module.exports = router;
